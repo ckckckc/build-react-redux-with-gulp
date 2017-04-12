@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Nav from './Nav.js';
+import Todo from './../todo/Todo.js';
 
 export default class App extends Component {
   render() {
@@ -8,8 +9,8 @@ export default class App extends Component {
         <Nav />
 
         <main>
-          <h1>Hello, world!</h1>
-          <button className="btn btn-primary">primary btn</button>
+          <h1>hello, world!</h1>
+          <Todo />
         </main>
       </div>
     );

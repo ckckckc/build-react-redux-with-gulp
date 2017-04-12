@@ -1,6 +1,7 @@
 module.exports = {
     "env": {
         "browser": true,
+        "node": true,
         "es6": true
     },
     "extends": "eslint:recommended",
@@ -15,14 +16,11 @@ module.exports = {
         "react"
     ],
     "rules": {
-        "indent": [
-            "error",
-            "tab"
-        ],
         "linebreak-style": [
             "error",
             "unix"
         ],
+        "no-console": "off",
         "quotes": [
             "error",
             "single"
@@ -31,6 +29,8 @@ module.exports = {
             "error",
             "always"
         ],
-        "react/jsx-uses-vars": [2],
+        "react/jsx-uses-react": "error",
+        "react/jsx-uses-vars": "error",
+        "react/react-in-jsx-scope": "error",
     }
 };
