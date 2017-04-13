@@ -1,6 +1,4 @@
 .nav{
-  position:relative;
-
   .nav-ul{
     position:relative;
     background-color: $nav-background;
@@ -12,6 +10,16 @@
     display:block;
     text-align: center;
     padding: $nav-link-padding;
+
+    &.active{
+      background-color: $nav-active-backgrond;
+      color: $nav-active-color;
+    }
+
+    &.active:hover{
+      background-color: $nav-active-backgrond;
+      color: $nav-active-color;
+    }
   }
 
   .nav-link:hover{
@@ -49,5 +57,8 @@
   }
 
   @media (max-width: 767px) {
+    .nav-ul{
+      // display: none;
+    }
   }
 }

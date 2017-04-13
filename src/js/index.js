@@ -8,12 +8,19 @@ import ReactDOM from 'react-dom';
 import rootReducer from './app/reducers.js';
 import thunkMiddleware from 'redux-thunk';
 
-let middleware = applyMiddleware(thunkMiddleware, promiseMiddleware());
+import createHistory from 'history/createBrowserHistory';
+import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
+
+const history = createHistory();
+
+let middleware = applyMiddleware(thunkMiddleware, promiseMiddleware(), routerMiddleware(history));
 let store = createStore(rootReducer, middleware);
 
 ReactDOM.render(
   <Provider store={store}>
-   <App />
+    <ConnectedRouter history={history}>
+      <App />
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root')
 );

@@ -117,7 +117,8 @@ gulp.task('inject-then-reload', injectThenReload);
 gulp.task('server-start', function() {
   connect.server({
     root: dir.dist.root,
-    livereload: true
+    livereload: true,
+    fallback: dir.dist.root + file.dist.html
   });
 });
 
