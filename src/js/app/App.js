@@ -8,7 +8,7 @@ export default class App extends Component {
       <div>
         <Nav />
 
-        <main>
+        <main class="main">
           <h1>hello, world!</h1>
           <Todo />
         </main>

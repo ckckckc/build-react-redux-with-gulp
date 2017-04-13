@@ -1,0 +1,53 @@
+.nav{
+  position:relative;
+
+  .nav-ul{
+    position:relative;
+    background-color: $nav-background;
+  }
+
+  .nav-link{
+    color: $primary-color;
+    cursor: pointer;
+    display:block;
+    text-align: center;
+    padding: $nav-link-padding;
+  }
+
+  .nav-link:hover{
+    background-color: $nav-hover-background;
+    color: $nav-hover-color;
+  }
+
+  @media (min-width: 1200px) {
+    .nav-ul{
+      position: fixed;
+      left: 0px;
+      top: 0px;
+      width: $nav-side-width;
+      height: 100%;
+    }
+  }
+
+  @media (max-width: 1199px) and (min-width: 768px) {
+    .nav-ul{
+      overflow: hidden;
+    }
+
+    .nav-li.right{
+      float:right;
+    }
+
+    .nav-li{
+      float:left;
+    }
+
+    .nav-li:last-child:after{
+      content: '';
+      clear:both;
+    }
+  }
+
+  @media (max-width: 767px) {
+  }
+}

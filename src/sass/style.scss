@@ -1,13 +1,9 @@
-@import './feature/reset.scss';
-
-$font-stack:    Helvetica, sans-serif;
-$primary-color: #333;
+@import './utilities/variables';
+@import './feature/reset';
+@import './app/nav';
+@import './app/main';
 
 body{
-  font: 100% $font-stack;
+  font-family: $font-family;
   color: $primary-color;
-
-  div{
-    transform: translate(0px, 5px);
-  }
 }
