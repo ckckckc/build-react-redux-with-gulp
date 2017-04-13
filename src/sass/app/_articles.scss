@@ -1,0 +1,14 @@
+.article {
+  margin: 80px auto;
+
+  .article-title{
+    color: $article-title-color;
+    font-size: 24px;
+    margin: 30px 50px;
+  }
+
+  .article-body{
+    margin: 30px 50px;
+    width: 80%;
+  }
+}

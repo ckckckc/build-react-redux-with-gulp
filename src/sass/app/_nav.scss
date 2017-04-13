@@ -1,4 +1,6 @@
 .nav{
+  background-color: $nav-background;
+
   .nav-ul{
     position:relative;
     background-color: $nav-background;
@@ -57,8 +59,29 @@
   }
 
   @media (max-width: 767px) {
+    width: 100%;
+    height: $nav-icon-length;
+
     .nav-ul{
-      // display: none;
+      overflow: hidden;
+      transition: transform 0.3s;
+      transform: translateY(-100%);
+
+      &.open{
+        transform: translateY(0%);
+      }
+    }
+
+    .nav-link{
+      padding: $nav-link-padding-mobile;
+    }
+
+    .menu-icon{
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      height:$nav-icon-length;
+      width: $nav-icon-length;
     }
   }
 }

@@ -7,13 +7,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import rootReducer from './app/reducers.js';
 import thunkMiddleware from 'redux-thunk';
+import logger from 'redux-logger';
 
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 
 const history = createHistory();
 
-let middleware = applyMiddleware(thunkMiddleware, promiseMiddleware(), routerMiddleware(history));
+let middleware = applyMiddleware(promiseMiddleware(), thunkMiddleware, routerMiddleware(history), logger);
 let store = createStore(rootReducer, middleware);
 
 ReactDOM.render(

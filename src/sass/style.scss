@@ -1,9 +1,15 @@
 @import './utilities/variables';
 @import './feature/reset';
+@import './ui/_icon.scss';
+@import './app/head-size';
+@import './app/home';
 @import './app/nav';
+@import './app/articles';
 @import './app/main';
+
 
 body{
   font-family: $font-family;
   color: $primary-color;
 }
+
