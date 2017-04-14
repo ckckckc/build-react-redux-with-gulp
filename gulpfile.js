@@ -56,6 +56,12 @@ var bundler = {
   })
 };
 
+var watch = function() {
+  gulp.watch(dir.src.sass  + '**/*.scss', ['sass']);
+  gulp.watch(dir.src.js    + '**/*.js', ['eslint']);
+  gulp.watch(dir.dist.root + '**/*', ['inject-then-reload']);
+};
+
 var handleError = function(err) { 
   console.error(err); this.emit('end'); 
 };
@@ -107,7 +113,8 @@ gulp.task('eslint', function() {
   return gulp.src(dir.src.js + '**/*.js')
           .pipe(eslint())
           .pipe(eslint.format())
-          .pipe(eslint.failAfterError());
+          .pipe(eslint.failAfterError())
+          .on('error', handleError);
 });
 
 gulp.task('inject', injectFiles);
@@ -183,11 +190,7 @@ gulp.task('script-production', function () {
           .pipe(gulp.dest(dir.dist.js));
 });
 
-gulp.task('watch', function(){
-  gulp.watch(dir.src.sass  + '**/*.scss', ['sass']);
-  gulp.watch(dir.src.js    + '**/*.js', ['eslint']);
-  gulp.watch(dir.dist.root + '**/*', ['inject-then-reload']);
-});
+gulp.task('watch', watch);
 
-gulp.task('default', ['server-start', 'sass', 'script', 'eslint', 'watch']);
+gulp.task('default', ['server-start', 'watch', 'sass', 'script', 'eslint'], injectFiles);
 gulp.task('production', ['script-production', 'sass-production'], injectFiles);
