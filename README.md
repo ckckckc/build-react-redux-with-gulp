@@ -7,7 +7,7 @@ $ git clone https://github.com/ckckckc/build-react-redux-with-gulp.git
 ```
 
 ```
-$ cd build-react-redux-with-gulp.git
+$ cd build-react-redux-with-gulp
 ```
 
 ```
