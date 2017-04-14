@@ -56,12 +56,6 @@ var bundler = {
   })
 };
 
-var watch = function() {
-  gulp.watch(dir.src.sass  + '**/*.scss', ['sass']);
-  gulp.watch(dir.src.js    + '**/*.js', ['eslint']);
-  gulp.watch(dir.dist.root + '**/*', ['inject-then-reload']);
-};
-
 var handleError = function(err) { 
   console.error(err); this.emit('end'); 
 };
@@ -190,7 +184,11 @@ gulp.task('script-production', function () {
           .pipe(gulp.dest(dir.dist.js));
 });
 
-gulp.task('watch', watch);
+gulp.task('watch', function() {
+  gulp.watch(dir.src.sass  + '**/*.scss', ['sass']);
+  gulp.watch(dir.src.js    + '**/*.js', ['eslint']);
+  gulp.watch(dir.dist.root + '**/*', ['inject-then-reload']);
+});
 
 gulp.task('default', ['server-start', 'watch', 'sass', 'script', 'eslint'], injectFiles);
 gulp.task('production', ['script-production', 'sass-production'], injectFiles);
