@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchArticle } from './articleAction.js';
+import config from '$config';
 
 class Article extends Component{
   componentWillMount() {
@@ -13,7 +14,9 @@ class Article extends Component{
 
     if (fetchingArticle) return (
       <article class="article">
-        <h2 class="article-title">Fetching Article...</h2>
+        <h2 class="article-title">
+          <img src={config.svg.loading} alt="Loading..."/>
+        </h2>
       </article>
     );
     return (

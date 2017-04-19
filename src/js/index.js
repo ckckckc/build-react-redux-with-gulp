@@ -7,15 +7,27 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import rootReducer from './app/reducers.js';
 import thunkMiddleware from 'redux-thunk';
-import logger from 'redux-logger';
 
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
-
+// console.log(process.env.NODE_ENV)
+// console.log(process.env.ENV_FILE)
 const history = createHistory();
 
-let middleware = applyMiddleware(promiseMiddleware(), thunkMiddleware, routerMiddleware(history), logger);
-let store = createStore(rootReducer, middleware);
+let middlewares = [
+  promiseMiddleware(), 
+  thunkMiddleware, 
+  routerMiddleware(history)
+];
+
+if (process.env.NODE_ENV !== 'production') {
+  middlewares.push(require('redux-logger').logger);
+}
+
+let store = createStore(
+  rootReducer, 
+  applyMiddleware(...middlewares)
+);
 
 ReactDOM.render(
   <Provider store={store}>

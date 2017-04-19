@@ -8,12 +8,16 @@ class Nav extends Component {
     this.state = {
       isOpenNav: false
     };
-    this.toggleNav = this.toggleNav.bind(this);
+    this.closeNav = this.closeNav.bind(this);
+    this.openNav = this.openNav.bind(this);
   }
 
-  toggleNav() {
-    let { isOpenNav } = this.state;
-    this.setState({isOpenNav: !isOpenNav});
+  openNav() {
+    this.setState({isOpenNav: true});
+  }
+
+  closeNav() {
+    this.setState({isOpenNav: false});
   }
 
   addActiveByPath(path) {
@@ -26,7 +30,7 @@ class Nav extends Component {
     const toggleUL = isOpenNav ? 'open' : '';
     return (
       <nav class="nav">
-        <div class="menu-icon" onClick={this.toggleNav}>
+        <div class="menu-icon" onClick={this.openNav}>
           <i class="tl"></i>
           <i class="ml"></i>
           <i class="bl"></i>
@@ -34,21 +38,21 @@ class Nav extends Component {
         <ul class={'nav-ul ' + toggleUL }>
           <li class="nav-li">
             <Link class={'nav-link ' + this.addActiveByPath('')} 
-                  onClick={this.toggleNav}
+                  onClick={this.closeNav}
                   to="/">
               Home
             </Link>
           </li>
           <li class="nav-li">
             <Link class={'nav-link ' + this.addActiveByPath('articles')} 
-                  onClick={this.toggleNav}
+                  onClick={this.closeNav}
                   to="/articles">
               Articles
             </Link>
           </li>
           <li class="nav-li right">
             <Link class={'nav-link ' + this.addActiveByPath('about')} 
-                  onClick={this.toggleNav}
+                  onClick={this.closeNav}
                   to="/about">
               About
             </Link>

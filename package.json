@@ -2,15 +2,21 @@
   "name": "build-react-redux-with-gulp",
   "version": "1.0.0",
   "description": "React Redux Project",
-  "main": "index.js",
+  "main": "src/js/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "NODE_ENV=development gulp -r",
+    "start": "NODE_ENV=development gulp",
+    "server": "gulp server-start",
+    "build": "NODE_ENV=production gulp build"
   },
   "author": "refala246@gmail.com",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.16.1",
     "babel-plugin-react-html-attrs": "^2.0.0",
+    "dotenv": "^4.0.0",
+    "envify": "^4.0.0",
     "history": "^4.6.1",
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.8",
@@ -19,6 +25,7 @@
     "react-router-dom": "^4.1.1",
     "react-router-redux": "^5.0.0-alpha.6",
     "redux": "^3.6.0",
+    "redux-logger": "^3.0.1",
     "redux-promise-middleware": "^4.2.0",
     "redux-thunk": "^2.2.0"
   },
@@ -37,12 +44,12 @@
     "gulp-autoprefixer": "^3.1.1",
     "gulp-connect": "^5.0.0",
     "gulp-eslint": "^3.0.1",
+    "gulp-imagemin": "^3.2.0",
     "gulp-inject": "^4.2.0",
     "gulp-rev": "^7.1.2",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-uglify": "^2.1.2",
-    "redux-logger": "^3.0.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.9.0"

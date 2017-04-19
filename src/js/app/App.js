@@ -13,7 +13,7 @@ export default class App extends Component {
         <Nav />
         <main class="main">
           <Route exact path="/" component={Home} />
-          <Route exact path="/articles/" component={Articles} />
+          <Route exact path="/articles" component={Articles} />
           <Route path="/articles/:articleId" component={Article} />
 
           <Route path="/todo" component={Todo} />

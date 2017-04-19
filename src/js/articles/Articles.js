@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { fetchArticles } from './articleAction.js';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import config from '$config';
 
 class Articles extends Component {
   componentWillMount() {
@@ -12,7 +13,9 @@ class Articles extends Component {
     const { articles, fetchingArticles } = this.props;
     if (fetchingArticles) return (
       <article class="article">
-        <h2 class="article-title">Fetching Articles...</h2>
+        <h2 class="article-title">
+          <img src={config.svg.loading} alt="Loading..."/>
+        </h2>
       </article>
     );
     return (
