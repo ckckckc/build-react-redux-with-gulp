@@ -2,7 +2,6 @@
  * TODO: Jest
  * gulp 
  * (watch, script, sass, image-min).then(inject files, local server)
-
  *    with arguments:
  *    -r
  *    trigger livereload
