@@ -15,8 +15,6 @@
   "dependencies": {
     "axios": "^0.16.1",
     "babel-plugin-react-html-attrs": "^2.0.0",
-    "dotenv": "^4.0.0",
-    "envify": "^4.0.0",
     "history": "^4.6.1",
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.8",
@@ -38,6 +36,7 @@
     "babelify": "^7.3.0",
     "browserify": "^14.1.0",
     "del": "^2.2.2",
+    "dotenv": "^4.0.0",
     "eslint": "^3.19.0",
     "eslint-plugin-react": "^6.10.3",
     "gulp": "^3.9.1",
