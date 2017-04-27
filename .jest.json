@@ -1,0 +1,4 @@
+{
+  "collectCoverageFrom": ["src/js/**/*.js"],
+  "setupTestFrameworkScriptFile": "./jest.env.js"
+}

@@ -17,11 +17,10 @@ var sassProductionOptions = {
 };
 
 var prefixerOptions = {
-  'browsers': ['Last 1 versions'],
-  'cascade': true
+  'browsers': ['Last 1 versions']
 };
 var prefixerProductionOptions = {
-  'browsers': ['Last 4 versions'],
+  'browsers': ['Last 4 versions', 'ie >= 8'],
   'cascade': false
 };
 
@@ -41,11 +40,10 @@ task.clean = function() {
   ]);
 };
 
-task.min = function() {
+task.build = function() {
   return gulp.src(dir.src.sass + file.src.sass)
     .pipe(sass(sassProductionOptions).on('error', sass.logError))
     .pipe(autoprefixer(prefixerProductionOptions))
-    .pipe(rev())
     .pipe(gulp.dest(dir.dist.css));
 };
 

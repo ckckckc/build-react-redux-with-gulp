@@ -8,7 +8,6 @@ var ENV         = require('./gulp-config.js').ENV;
 var file        = require('./gulp-config.js').file;
 var gulp        = require('gulp');
 var handleError = require('./gulp-config.js').handleError;
-var uglify      = require('gulp-uglify');
 var rev         = require('gulp-rev');
 var source      = require('vinyl-source-stream');
 var watchify    = require('watchify');
@@ -24,7 +23,7 @@ var bundler = browserify({
   'debug': process.env.NODE_ENV === ENV.DEVELOPMENT,
   'cache': {},
   'packageCache': {},
-  'transform': [babelify, envify]
+  'transform': [envify, babelify]
 });
 
 var watcher = process.env.NODE_ENV === ENV.PRODUCTION || watchify(bundler);
@@ -55,14 +54,12 @@ task.clean = function() {
   ]);
 };
 
-task.min = function () {
+task.build = function () {
   return bundler
           .bundle()
           .on('error', handleError)
           .pipe(source(file.dist.js))
           .pipe(buffer())
-          .pipe(uglify())
-          .pipe(rev())
           .pipe(gulp.dest(dir.dist.js));
 };
 

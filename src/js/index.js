@@ -5,13 +5,12 @@ import { Provider } from 'react-redux';
 import promiseMiddleware from 'redux-promise-middleware';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import rootReducer from './app/reducers.js';
+import rootReducer from './rootReducer.js';
 import thunkMiddleware from 'redux-thunk';
 
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
-// console.log(process.env.NODE_ENV)
-// console.log(process.env.ENV_FILE)
+
 const history = createHistory();
 
 let middlewares = [

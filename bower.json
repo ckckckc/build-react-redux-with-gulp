@@ -1,0 +1,26 @@
+{
+  "name": "build-react-redux-with-gulp",
+  "description": "React Redux Project",
+  "main": "src/js/index.js",
+  "authors": [
+    "refala246@gmail.com"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/ckckckc/build-react-redux-with-gulp",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "resolutions": {
+    "jquery": ">=1.6.3 <3"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "bootstrap": "^3.3.7",
+    "bootstrap-css": "^3.3.7"
+  },
+  "devDependencies": {}
+}

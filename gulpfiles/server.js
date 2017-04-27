@@ -12,6 +12,13 @@ exports.start = function() {
   });
 };
 
+exports['server-build'] = function() {
+  connect.server({
+    root: dir.public.root,
+    fallback: dir.public.root + file.public.html
+  });
+};
+
 exports.reload = function(){
   return gulp.src(dir.dist.root + file.dist.html)
           .pipe(connect.reload());

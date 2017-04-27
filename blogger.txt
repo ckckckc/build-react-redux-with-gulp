@@ -1,0 +1,167 @@
+本篇敘述如何使用 Gulp 打造 React Redux Router ES6 的開發環境，以下將會說明所需的套件及設定方式，關於 React Redux ES6 等相關知識不在此篇筆記介紹範圍。
+
+本篇所建立的開發環境：
+
+編譯 JSX 及 ES6 語法 | Babel Browserify
+編譯 SASS 檔案 | Gulp Sass
+建立開發用伺服器及瀏覽器自動重新載入 | Gulp Watch Connect
+HTML 自動注入 JS CSS | Gulp Inject
+JavaScript SASS 程式碼壓縮 | Gulp Sass Uglify
+JavaScript 語法偵錯 | ESLint
+單元測試 | Jest
+轉換開發及產品環境變數 | Browerify Dotenv Envify
+前端套件自動化 | Bower Wiredep
+產品環境下打包所有 JS CSS 檔案 | Gulp Useref
+輸出的 CSS JS 檔案附加不重複的檔名 | Gulp Rev 
+此外，還導入 Redux React-Router 架構 | React Redux Router
+
+基本需求
+
+<p>已安裝 <b>NodeJS</b> 及了解如何使用 <b>npm</b> 安裝套件，並知道如何使用 Gulp 建立 task</p>
+
+============================================================================
+編譯 JSX 及 ES6 語法 | Babel Browserify
+============================================================================
+
+React 使用 JSX 語法，將 View 嵌入 JS 邏輯中，JSX 為 JavaScript 的 expression，然而現在的瀏覽器是無法讀懂它及ES6 語法，因此我們需要工具編譯它，將它轉換為瀏覽器看得懂的語法，而這裡是使用 browserify babel 搭配 gulp 編譯 es6 及 jsx 的設定：
+
+需要的 node package:
+
+npm install --save-dev gulp babel-plugin-react-html-attrs babel-preset-es2015 babel-preset-react babel-preset-stage-0 babelify browserify watchify vinyl-buffer vinyl-source-stream
+
+
+首先在專案的根目錄建立 .babelrc 檔案，儲存 babel 的編譯規則。
+// .babelrc 
+{
+  "presets": ["es2015", "react", "stage-0"],
+  // react-html-attrs 可以把 JSX 中的 class 轉成 className、for 轉成 htmlFor (選用)
+  "plugins": ["react-html-attrs"]
+}
+
+同樣在專案的根目錄建立 gulpfile.js，開始撰寫各個 task
+
+// gulpfile.js
+var gulp       = require('gulp');
+var browserify = require('browserify');
+var babelify   = require('babelify');
+var buffer     = require('vinyl-buffer');
+var source     = require('vinyl-source-stream');
+var watchify   = require('watchify');
+
+// 印出錯誤，並發出事件完成，避免編譯過程因部分錯誤而讓 watch 中的 task 停止。
+var handleError = function(err) {
+  console.error(err); this.emit('end'); 
+};
+
+//  開始設定 browserify 編譯規則
+var bundler = browserify({
+  // react 進入點
+  'entries': 'src/js/index.js', 
+  // true 可以讓瀏覽器的 console 印出出現 bug 的行數是來自在哪一個檔案的哪一行，而不是最後編譯後的檔案的哪一行
+  'debug': true,
+  // watchify 必須設定以下兩個屬性
+  'cache': {},
+  'packageCache': {},
+  // 使用 babelify 轉換：會讀取根目錄 .babelrc 檔案的 babel 轉換規則
+  'transform': [babelify]
+});
+
+// 若是開發環境，我們在撰寫 .js 檔案的時候，將整個 React 專案重新編譯會太慢，watchify 提供 update 事件，讓重新編譯的速度更快。
+var watcher = watchify(bundler);
+
+watcher.on('update', function(e) {
+  var start = Date.now();
+  console.log('browserify update start... ', e);
+  gulp.start('script');
+  console.log('browserify update end after ', Date.now() - start + ' milliseconds');
+});
+
+// browserify 依據設定進行編譯，並將檔案匯出至指定資料夾。
+gulp.task('script', function() {
+  return watcher
+          .bundle()
+          .on('error', handleError)
+          .pipe(source('bundle.js'))
+          .pipe(buffer())
+          .pipe(gulp.dest('dist/js/'));
+});
+
+
+
+============================================================================
+編譯 SASS 檔案 | Gulp Sass
+============================================================================
+
+使用 gulp-sass 能編譯 sass 檔案，使用方式及設定都很簡單。在開發過程中，若要要讓瀏覽器讀 css 的行數反映在 .scss 檔案方便開發的話，需要搭配 gulp-sourcemaps。以下是需要的套件：
+
+npm install --save-dev gulp-autoprefixer gulp-sass gulp-sourcemaps
+
+// gulpfile.js
+var autoprefixer = require('gulp-autoprefixer');
+var gulp         = require('gulp');
+var sass         = require('gulp-sass');
+var sourcemaps   = require('gulp-sourcemaps');
+
+// 可以根據不同的開發環境給不同的 option
+var sassOptions = {
+  'includePaths': ['src/sass/'], 
+};
+var prefixerOptions = {
+  'browsers': ['Last 1 versions']
+};
+
+// 加入 sass task
+gulp.task('sass', function() {
+  return gulp.src('src/sass/style.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass(sassOptions).on('error', sass.logError))
+    .pipe(sourcemaps.write())
+    .pipe(autoprefixer(prefixerOptions))
+    .pipe(gulp.dest('dist/css/style.css'));
+});
+
+[autoprefixer 設定參數](https://github.com/postcss/autoprefixer)
+
+
+
+
+
+
+============================================================================
+儲存編輯中的檔案會觸發再次編譯及瀏覽器自動重新載入 | Gulp Watch Connect
+============================================================================
+
+若在開發環境中，每次儲存檔案後都要手動重新載入新編譯好的程式碼是常有的事情，這部分我們可以使用 gulp-connect 來達到 livereload 的功能，當然，如果不想要 livereload ，也可以只建立一個單純開發用的本地端伺服器。
+
+npm install --save-dev gulp-connect
+
+// gulpfile.js
+var connect = require('gulp-connect');
+var gulp    = require('gulp');
+
+// TODO
+// 建立 server: http://localhost:8080 (預設)
+gulp.task('server', function(){
+  connect.server({
+    root: dir.dist.root,
+    livereload: process.argv.indexOf(ARGS.LIVE_RELOAD) !== -1,
+    fallback: dir.dist.root + file.dist.html
+  });
+});
+
+// 觸發 reload 的 task，在某些條件，若已經跑過 server task，觸發這個 task 就會 reload
+gulp.task('reload', function() {
+  return gulp.src(dir.dist.root + file.dist.html)
+          .pipe(connect.reload());
+});
+
+// TODO
+============================================================================
+HTML 自動注入 JS CSS | Gulp Inject
+============================================================================
+
+
+
+最後的資料夾樹狀圖：
+
+

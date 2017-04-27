@@ -1,6 +1,10 @@
 .nav{
   background-color: $nav-background;
 
+  a{
+    text-decoration: none;
+  }
+
   .nav-ul{
     position:relative;
     background-color: $nav-background;

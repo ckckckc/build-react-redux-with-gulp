@@ -11,13 +11,26 @@ var image = {
       dir.dist.images + '**/*',
     ]);
   },
-  min: function() {
+  'del-build': function() {
+    return del([
+      dir.public.root + '**/*',
+    ]);
+  },
+  dev: function() {
     return gulp.src(dir.src.images + file.src.images, {
               base: dir.src.images
             })
           .pipe(imagemin())
           .on('error', handleError)
           .pipe(gulp.dest(dir.dist.images));
+  },
+  build: function() {
+    return gulp.src(dir.src.images + file.src.images, {
+              base: dir.src.images
+            })
+          .pipe(imagemin())
+          .on('error', handleError)
+          .pipe(gulp.dest(dir.public.images));
   },
 };
 

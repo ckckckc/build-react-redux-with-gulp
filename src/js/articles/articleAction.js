@@ -1,4 +1,4 @@
-import http from '$http';
+import http from './../lib/http.js';
 
 export function fetchArticles() {
   const url = '/posts';

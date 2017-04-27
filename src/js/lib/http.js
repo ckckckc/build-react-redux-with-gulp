@@ -1,7 +1,7 @@
 var axios = require('axios');
 
 var http = axios.create({
-  baseURL: 'https://jsonplaceholder.typicode.com'
+  baseURL: process.env.BASE_URL
 });
 
 module.exports = http;
