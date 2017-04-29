@@ -39,7 +39,7 @@ $ npm test
 * dist: development root folder
 * src: html css js source code
 * gulpfiles: gulp tasks
-* temp: temporary save files for building public folder
+* temp: temporarily save files for building public folder
 
 ## Feature
 
