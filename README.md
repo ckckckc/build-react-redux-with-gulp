@@ -39,6 +39,7 @@ $ npm test
 * dist: development root folder
 * src: html css js source code
 * gulpfiles: gulp tasks
+* temp: temporary save files for building public folder
 
 ## Feature
 
@@ -54,4 +55,5 @@ $ npm test
 * Manage front end package | Bower Wiredep
 * Compress all the files by the same file type | Gulp Useref
 * Output file name with hash | Gulp Rev 
+* Minify PNG, JPEG, GIF and SVG images | Gulp Imagemin
 * Sample code with Redux React-Router | React Redux Router
