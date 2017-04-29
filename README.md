@@ -12,6 +12,8 @@ $ git clone https://github.com/ckckckc/build-react-redux-with-gulp.git
 $ cd build-react-redux-with-gulp
 ```
 
+### development
+
 ```
 $ npm install
 ```
@@ -20,22 +22,35 @@ $ npm install
 $ npm run bower-install
 ```
 
-(development)
 ```
 $ npm run dev
 ```
 
-(production)
+### production
+
+```
+$ npm install
+```
+
+```
+$ npm run bower-install
+```
+
+(Add .env for production config, ex: BASE_URL={your_production_baseURL} )
+```
+$ touch .env
+```
+
 ```
 $ npm run build
 ```
 
-(test)
+### test
 ```
 $ npm test
 ```
 
-(lint)
+### lint
 ```
 $ npm run lint
 ```
@@ -44,7 +59,7 @@ $ npm run lint
 
 * public: production root folder
 * dist: development root folder
-* src: html css js source code
+* src: html sass js source code and images
 * gulpfiles: gulp tasks
 * temp: temporarily save files for building public folder
 
