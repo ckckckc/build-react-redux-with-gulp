@@ -39,7 +39,6 @@ $ npm test
 * dist: development root folder
 * src: html css js source code
 * gulpfiles: gulp tasks
-* coverage: jest result
 
 ## Feature
 
@@ -52,7 +51,7 @@ $ npm test
 * JavaScript ESLint | ESLint
 * Unit test | Jest
 * Switch development/production enviroment variable | Browerify Dotenv Envify
-* Manage froent end package | Bower Wiredep
+* Manage front end package | Bower Wiredep
 * Compress all the files by the same file type | Gulp Useref
 * Output file name with hash | Gulp Rev 
 * Sample code with Redux React-Router | React Redux Router

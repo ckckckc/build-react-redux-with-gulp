@@ -44,3 +44,51 @@ gulp.task('script', function() {
           .pipe(buffer())
           .pipe(gulp.dest('dist/js/'));
 });
+
+var connect = require('gulp-connect');
+
+// 建立伺服器: http://localhost:8080 (預設)
+gulp.task('server', function(){
+  connect.server({
+    // 本地伺服器根目錄
+    root: 'dist/',
+    // 當 connect.reload() 時，瀏覽器是否要重新載入
+    livereload: true,
+    // 用於 react router，所有 root folder 以下的 request 都會轉導到指定檔案
+    fallback: 'dist/index.html'
+  });
+});
+
+// 觸發 livereload 的 task，若已經跑過 server task，觸發這個 task 就會 reload
+// 搭配 gulp.watch 來執行
+gulp.task('reload', function() {
+  return gulp.src('dist/index.html')
+          .pipe(connect.reload());
+});
+
+
+
+
+
+// gulpfile.js
+var autoprefixer = require('gulp-autoprefixer');
+var sass         = require('gulp-sass');
+var sourcemaps   = require('gulp-sourcemaps');
+
+// 可以根據不同的開發環境給不同的 option
+var sassOptions = {
+  'includePaths': ['src/sass/'], 
+};
+var prefixerOptions = {
+  'browsers': ['Last 1 versions']
+};
+
+// 加入 sass task
+gulp.task('sass', function() {
+  return gulp.src('src/sass/style.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass(sassOptions).on('error', sass.logError))
+    .pipe(sourcemaps.write())
+    .pipe(autoprefixer(prefixerOptions))
+    .pipe(gulp.dest('dist/css/'));
+});

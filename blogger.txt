@@ -5,12 +5,11 @@
 編譯 JSX 及 ES6 語法 | Babel Browserify
 編譯 SASS 檔案 | Gulp Sass
 建立開發用伺服器及瀏覽器自動重新載入 | Gulp Watch Connect
-HTML 自動注入 JS CSS | Gulp Inject
+檔案自動引入 | Bower Wiredep Gulp Inject
 JavaScript SASS 程式碼壓縮 | Gulp Sass Uglify
 JavaScript 語法偵錯 | ESLint
 單元測試 | Jest
 轉換開發及產品環境變數 | Browerify Dotenv Envify
-前端套件自動化 | Bower Wiredep
 產品環境下打包所有 JS CSS 檔案 | Gulp Useref
 輸出的 CSS JS 檔案附加不重複的檔名 | Gulp Rev 
 此外，還導入 Redux React-Router 架構 | React Redux Router
@@ -98,7 +97,6 @@ npm install --save-dev gulp-autoprefixer gulp-sass gulp-sourcemaps
 
 // gulpfile.js
 var autoprefixer = require('gulp-autoprefixer');
-var gulp         = require('gulp');
 var sass         = require('gulp-sass');
 var sourcemaps   = require('gulp-sourcemaps');
 
@@ -117,7 +115,7 @@ gulp.task('sass', function() {
     .pipe(sass(sassOptions).on('error', sass.logError))
     .pipe(sourcemaps.write())
     .pipe(autoprefixer(prefixerOptions))
-    .pipe(gulp.dest('dist/css/style.css'));
+    .pipe(gulp.dest('dist/css/'));
 });
 
 [autoprefixer 設定參數](https://github.com/postcss/autoprefixer)
@@ -137,28 +135,62 @@ npm install --save-dev gulp-connect
 
 // gulpfile.js
 var connect = require('gulp-connect');
-var gulp    = require('gulp');
 
-// TODO
 // 建立 server: http://localhost:8080 (預設)
 gulp.task('server', function(){
   connect.server({
-    root: dir.dist.root,
-    livereload: process.argv.indexOf(ARGS.LIVE_RELOAD) !== -1,
-    fallback: dir.dist.root + file.dist.html
+    // 本地伺服器根目錄
+    root: 'dist/',
+    // 當 connect.reload() 時，瀏覽器是否要重新載入
+    livereload: true,
+    // 用於 react router，所有 root folder 以下的 request 都會轉導到指定檔案
+    fallback: 'dist/index.html'
   });
 });
 
-// 觸發 reload 的 task，在某些條件，若已經跑過 server task，觸發這個 task 就會 reload
+// 觸發 livereload 的 task，若已經跑過 server task，觸發這個 task 就會 reload
+// 搭配 gulp.watch 來執行
 gulp.task('reload', function() {
-  return gulp.src(dir.dist.root + file.dist.html)
+  return gulp.src('dist/index.html')
           .pipe(connect.reload());
 });
 
+
 // TODO
 ============================================================================
-HTML 自動注入 JS CSS | Gulp Inject
+檔案自動引入 | Bower Wiredep Gulp Inject
 ============================================================================
+
+使用 bower 可以管理前端常用的套件，如果 global 安裝 bower 可以像 npm 一樣，使用 bower init 開始設定 bower.json 內容，就像 npm init 一樣，使用 bower install <套件名稱> --save 的方式安裝，預設會安裝在根目錄的 bower_components 資料夾中，記得檢查 gitignore 有沒有忽略這個資料夾，若要更改安裝的目錄位置，可以在根目錄新增 .bowerrc 檔案，加入更換的資料夾位置：
+
+// .bowerrc
+{
+  "directory": "./dist/bower_components"
+}
+
+// gulpfile.js
+
+exports.inject = function() {
+  var sources = gulp.src(
+    [
+      dir.dist.js  + '*.js', 
+      dir.dist.css + '*.css'
+    ], 
+    {
+      read: false
+    }
+  );
+
+  return gulp
+          .src(dir.src.html + file.src.html)
+          .pipe(wiredep({'ignorePath': dir.bowerIgnorePath}))
+          .pipe(inject(sources, {'ignorePath': dir.injectIgnorePath}))
+          .pipe(gulp.dest(dir.dist.root));
+};
+
+
+
+
 
 
 
