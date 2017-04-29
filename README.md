@@ -42,7 +42,7 @@ $ npm install
 $ npm run bower-install
 ```
 
-(Add .env for production config, ex: BASE_URL={your_production_baseURL} )
+(Add .env file at project root folder for production config, ex: BASE_URL={your_production_baseURL} )
 ```
 $ touch .env
 ```
