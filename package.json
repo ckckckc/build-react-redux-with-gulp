@@ -5,12 +5,12 @@
   "main": "src/js/index.js",
   "scripts": {
     "bower-install": "node_modules/bower/bin/bower install",
-    "build": "NODE_ENV=production gulp build",
-    "dev": "NODE_ENV=development gulp -r",
-    "lint": "gulp eslint",
-    "server-build": "gulp server-build",
-    "server": "gulp server",
-    "start": "NODE_ENV=development gulp",
+    "build": "NODE_ENV=production node_modules/gulp/bin/gulp.js build",
+    "dev": "NODE_ENV=development node_modules/gulp/bin/gulp.js -r",
+    "lint": "node_modules/gulp/bin/gulp.js eslint",
+    "server-build": "node_modules/gulp/bin/gulp.js server-build",
+    "server": "node_modules/gulp/bin/gulp.js server",
+    "start": "NODE_ENV=development node_modules/gulp/bin/gulp.js",
     "test": "jest --config ./.jest.json  --coverage"
   },
   "author": "refala246@gmail.com",

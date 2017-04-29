@@ -22,6 +22,12 @@ $ npm install
 $ npm run bower-install
 ```
 
+Without livereload:
+```
+$ npm run start
+```
+
+With livereload:
 ```
 $ npm run dev
 ```
