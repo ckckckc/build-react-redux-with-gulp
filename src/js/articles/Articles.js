@@ -42,7 +42,7 @@ export class Articles extends Component {
 }
 
 export default connect(store => {
-  const { articles, fetchingArticles } = store.Article;
+  const { articles, fetchingArticles } = store.article;
   return { articles, fetchingArticles };
 }, dispatch => {
   return {

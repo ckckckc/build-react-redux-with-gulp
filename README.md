@@ -1,5 +1,7 @@
 # build-react-redux-with-gulp
 
+Starter for react-redux react-router project built by gulp.
+
 ## How To Use It
 
 ```
@@ -31,6 +33,11 @@ $ npm run build
 (test)
 ```
 $ npm test
+```
+
+(lint)
+```
+$ npm run lint
 ```
 
 ## Folder Structure

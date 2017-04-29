@@ -4,7 +4,7 @@ import { routerReducer } from 'react-router-redux';
 
 const rootReducer = combineReducers({
   router : routerReducer,
-  Article: articleReducer,
+  article: articleReducer,
 });
 
 export default rootReducer;

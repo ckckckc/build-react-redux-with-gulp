@@ -42,7 +42,7 @@ class Article extends Component{
       </article>
     );
     return (
-      <article class="article">
+      <article class="article container">
         <h2 class="article-title">
           {article.title}
         </h2>
@@ -50,12 +50,10 @@ class Article extends Component{
           {article.body}
         </p>
 
-
         <Button
           bsStyle="primary"
           bsSize="large"
-          onClick={this.openModal}
-        >
+          onClick={this.openModal} >
           Launch demo modal
         </Button>
 
@@ -85,7 +83,7 @@ class Article extends Component{
 }
 
 export default connect((store) => {
-  const { article, fetchingArticle } = store.Article;
+  const { article, fetchingArticle } = store.article;
   return { article, fetchingArticle };
 }, dispatch => {
   return {

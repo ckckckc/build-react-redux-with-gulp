@@ -76,10 +76,6 @@ gulp.task('default', ['watch', 'script', 'sass', 'image-dev'], function() {
   gulp.start('server');
 });
 
-gulp.task('pre-build', ['del-public', 'script-build', 'sass-build'], function() {
-  gulp.start('inject');
-});
-
 gulp.task('build', gulpSync.sync([
     ['del-public', 'script-build', 'sass-build'],
     'inject',

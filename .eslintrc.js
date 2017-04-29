@@ -34,8 +34,5 @@ module.exports = {
     "react/jsx-uses-vars": "error",
     "react/react-in-jsx-scope": "error",
     "react/no-unknown-property": ["off", {"ignore": ["class", "for"]}],
-  },
-  "globals": {
-    "toastr": true
   }
 };

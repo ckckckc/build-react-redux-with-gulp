@@ -1,8 +1,8 @@
-import RootComponent from './RootComponent.js';
+import Home from './Home.js';
 
-describe('RootComponent Component', () => {
+describe('Home Component', () => {
   it('should be defined', () => {
-    expect(RootComponent).toBeDefined();
+    expect(Home).toBeDefined();
   });
 });
 

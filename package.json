@@ -7,6 +7,7 @@
     "bower-install": "node_modules/bower/bin/bower install",
     "build": "NODE_ENV=production gulp build",
     "dev": "NODE_ENV=development gulp -r",
+    "lint": "gulp eslint",
     "server-build": "gulp server-build",
     "server": "gulp server",
     "start": "NODE_ENV=development gulp",
