@@ -91,7 +91,7 @@ gulp.task('script', function() {
 編譯 SASS 檔案 | Gulp Sass
 ============================================================================
 
-使用 gulp-sass 能編譯 sass 檔案，使用方式及設定都很簡單。在開發過程中，若要要讓瀏覽器讀 css 的行數反映在 .scss 檔案方便開發的話，需要搭配 gulp-sourcemaps。以下是需要的套件：
+使用 gulp-sass 能編譯 sass 檔案，使用方式及設定都很簡單。在開發過程中，若要要讓瀏覽器讀 css 的行數反映在 .scss 檔案位址以方便開發的話，需要搭配 gulp-sourcemaps。以下是需要的套件：
 
 npm install --save-dev gulp-autoprefixer gulp-sass gulp-sourcemaps
 
@@ -156,25 +156,64 @@ gulp.task('reload', function() {
 });
 
 
-// TODO
 ============================================================================
 檔案自動引入 | Bower Wiredep Gulp Inject
 ============================================================================
 
-使用 bower 可以管理前端常用的套件，如果 global 安裝 bower 可以像 npm 一樣，使用 bower init 開始設定 bower.json 內容，就像 npm init 一樣，使用 bower install <套件名稱> --save 的方式安裝，預設會安裝在根目錄的 bower_components 資料夾中，記得檢查 gitignore 有沒有忽略這個資料夾，若要更改安裝的目錄位置，可以在根目錄新增 .bowerrc 檔案，加入更換的資料夾位置：
 
+這邊建置的檔案自動引入 task 會將 bower 安裝的套件和自己撰寫的檔案一起自動引入到 html 檔中，使用 wiredep 搭配 gulp-inject 就可以達到如此目的，不需要在手動管理 html 中的 script link 標籤。使用 bower 可以管理前端常用的套件，如 jquery、bootstrap、sweetalert 等。如果 global 安裝 bower 可以像 npm 一樣，使用 bower init 開始設定 bower.json 內容，使用 bower install <套件名稱> --save 的方式安裝，預設會安裝在根目錄的 bower_components 資料夾中，記得在 gitignore 中忽略這個資料夾，若要更改安裝的目錄位置，可以在根目錄新增 .bowerrc 檔案，加入更換的資料夾位置：
 // .bowerrc
 {
   "directory": "./dist/bower_components"
 }
 
+
+wiredep 會判斷 
+<!-- bower:css -->
+<!-- endbower  -->
+
+<!-- bower:js -->
+<!-- endbower -->
+的位置注入安裝的 bower package
+
+gulp-inject 會判斷
+<!-- inject:css -->
+<!-- endinject -->
+
+<!-- inject:js -->
+<!-- endinject -->
+的位置將指定的檔案注入到該處
+// index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build React Redux with Gulp</title>
+  <!-- bower:css -->
+  <!-- endbower  -->
+  <!-- inject:css -->
+  <!-- endinject -->
+</head>
+<body>
+<div id="root"></div>
+  <!-- bower:js -->
+  <!-- endbower -->
+  <!-- inject:js -->
+  <!-- endinject -->
+</body>
+</html>
+
+
 // gulpfile.js
+var inject  = require('gulp-inject');
+var wiredep = require('wiredep').stream;
 
 exports.inject = function() {
-  var sources = gulp.src(
+  var injectSources = gulp.src(
     [
-      dir.dist.js  + '*.js', 
-      dir.dist.css + '*.css'
+      'dist/js/*.js', 
+      'dist/css/*.css'
     ], 
     {
       read: false
@@ -182,10 +221,10 @@ exports.inject = function() {
   );
 
   return gulp
-          .src(dir.src.html + file.src.html)
-          .pipe(wiredep({'ignorePath': dir.bowerIgnorePath}))
-          .pipe(inject(sources, {'ignorePath': dir.injectIgnorePath}))
-          .pipe(gulp.dest(dir.dist.root));
+          .src('src/index.html')
+          .pipe(wiredep())
+          .pipe(inject(injectSources))
+          .pipe(gulp.dest('dist/'));
 };
 
 

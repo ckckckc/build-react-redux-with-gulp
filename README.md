@@ -73,15 +73,15 @@ $ npm run lint
 
 * Compile JSX ES6 | Babel Browserify
 * Compile SASS | Gulp Sass
-* Uglify JavaScript SASS | Gulp Sass Uglify
+* Manage front end package | Bower Wiredep
 * Auto inject JS CSS into HTML  | Gulp Inject
 * Local server with livereload | Gulp Watch Connect
 * Debug mode | Gulp Sourcemap
 * JavaScript ESLint | ESLint
 * Unit test | Jest
 * Switch development/production enviroment variable | Browerify Dotenv Envify
-* Manage front end package | Bower Wiredep
+* Uglify JavaScript SASS | Gulp Sass Uglify
+* Minify PNG, JPEG, GIF and SVG images | Gulp Imagemin
 * Compress all the files by the same file type | Gulp Useref
 * Output file name with hash | Gulp Rev 
-* Minify PNG, JPEG, GIF and SVG images | Gulp Imagemin
 * Sample code with Redux React-Router | React Redux Router
