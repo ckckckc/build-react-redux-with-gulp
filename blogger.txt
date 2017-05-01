@@ -6,10 +6,10 @@
 編譯 SASS 檔案 | Gulp Sass
 建立開發用伺服器及瀏覽器自動重新載入 | Gulp Watch Connect
 檔案自動引入 | Bower Wiredep Gulp Inject
-JavaScript SASS 程式碼壓縮 | Gulp Sass Uglify
 JavaScript 語法偵錯 | ESLint
 單元測試 | Jest
 轉換開發及產品環境變數 | Browerify Dotenv Envify
+JavaScript SASS 程式碼壓縮 | Gulp Sass Uglify
 產品環境下打包所有 JS CSS 檔案 | Gulp Useref
 輸出的 CSS JS 檔案附加不重複的檔名 | Gulp Rev 
 此外，還導入 Redux React-Router 架構 | React Redux Router
@@ -26,7 +26,7 @@ React 使用 JSX 語法，將 View 嵌入 JS 邏輯中，JSX 為 JavaScript 的 
 
 需要的 node package:
 
-npm install --save-dev gulp babel-plugin-react-html-attrs babel-preset-es2015 babel-preset-react babel-preset-stage-0 babelify browserify watchify vinyl-buffer vinyl-source-stream
+$ npm install --save-dev gulp babel-plugin-react-html-attrs babel-preset-es2015 babel-preset-react babel-preset-stage-0 babelify browserify watchify vinyl-buffer vinyl-source-stream
 
 
 首先在專案的根目錄建立 .babelrc 檔案，儲存 babel 的編譯規則。
@@ -93,7 +93,7 @@ gulp.task('script', function() {
 
 使用 gulp-sass 能編譯 sass 檔案，使用方式及設定都很簡單。在開發過程中，若要要讓瀏覽器讀 css 的行數反映在 .scss 檔案位址以方便開發的話，需要搭配 gulp-sourcemaps。以下是需要的套件：
 
-npm install --save-dev gulp-autoprefixer gulp-sass gulp-sourcemaps
+$ npm install --save-dev gulp-autoprefixer gulp-sass gulp-sourcemaps
 
 // gulpfile.js
 var autoprefixer = require('gulp-autoprefixer');
@@ -131,7 +131,7 @@ gulp.task('sass', function() {
 
 若在開發環境中，每次儲存檔案後都要手動重新載入新編譯好的程式碼是常有的事情，這部分我們可以使用 gulp-connect 來達到 livereload 的功能，當然，如果不想要 livereload ，也可以只建立一個單純開發用的本地端伺服器。
 
-npm install --save-dev gulp-connect
+$ npm install --save-dev gulp-connect
 
 // gulpfile.js
 var connect = require('gulp-connect');
@@ -161,12 +161,15 @@ gulp.task('reload', function() {
 ============================================================================
 
 
-這邊建置的檔案自動引入 task 會將 bower 安裝的套件和自己撰寫的檔案一起自動引入到 html 檔中，使用 wiredep 搭配 gulp-inject 就可以達到如此目的，不需要在手動管理 html 中的 script link 標籤。使用 bower 可以管理前端常用的套件，如 jquery、bootstrap、sweetalert 等。如果 global 安裝 bower 可以像 npm 一樣，使用 bower init 開始設定 bower.json 內容，使用 bower install <套件名稱> --save 的方式安裝，預設會安裝在根目錄的 bower_components 資料夾中，記得在 gitignore 中忽略這個資料夾，若要更改安裝的目錄位置，可以在根目錄新增 .bowerrc 檔案，加入更換的資料夾位置：
+這邊建置的檔案自動引入 task 會將 bower 安裝的套件和自己撰寫的檔案一起自動引入到 html 檔中，使用 wiredep 搭配 gulp-inject 就可以達到如此目的，不需要在手動管理 html 中的 script link 標籤。
+
+$ npm install --save-dev gulp-inject wiredep
+
+使用 bower 可以管理前端常用的套件，如 jquery、bootstrap、sweetalert 等。如果 global 安裝 bower 可以像 npm 一樣，使用 bower init 開始設定 bower.json 內容，使用 bower install <套件名稱> --save 的方式安裝，預設會安裝在根目錄的 bower_components 資料夾中，記得在 gitignore 中忽略這個資料夾，若要更改安裝的目錄位置，可以在根目錄新增 .bowerrc 檔案，加入更換的資料夾位置：
 // .bowerrc
 {
   "directory": "./dist/bower_components"
 }
-
 
 wiredep 會判斷 
 <!-- bower:css -->
@@ -183,6 +186,7 @@ gulp-inject 會判斷
 <!-- inject:js -->
 <!-- endinject -->
 的位置將指定的檔案注入到該處
+
 // index.html
 <!DOCTYPE html>
 <html lang="en">
@@ -209,7 +213,7 @@ gulp-inject 會判斷
 var inject  = require('gulp-inject');
 var wiredep = require('wiredep').stream;
 
-exports.inject = function() {
+gulp.task('inject', function(){
   var injectSources = gulp.src(
     [
       'dist/js/*.js', 
@@ -225,11 +229,94 @@ exports.inject = function() {
           .pipe(wiredep())
           .pipe(inject(injectSources))
           .pipe(gulp.dest('dist/'));
+});
+
+============================================================================
+JavaScript 語法偵錯 | ESLint
+============================================================================
+
+ESLint 能在開發過程督促自己寫出有意義且規定好的程式碼，並且能安裝 plugin 支援 react 環境下的語法提示，我們從安裝 ESLint 這個套件開始：
+
+全域
+$ npm install eslint -g
+
+區域
+$ npm install eslint --save-dev
+
+安裝完後輸入
+$ eslint --init
+
+接著會看到類似以下的問答提示：
+
+? How would you like to configure ESLint? (Use arrow keys)
+❯ Answer questions about your style
+  Use a popular style guide
+  Inspect your JavaScript file(s)
+
+若在回答過程中得知需要另外安裝 eslint 的 plugin 他也會自動安裝。
+
+以下是我建出來並做了些微調的 .eslintrc.js 檔案：
+// .eslintrc.js
+module.exports = {
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "jest": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "no-console": "off",
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/react-in-jsx-scope": "error",
+    "react/no-unknown-property": ["off", {"ignore": ["class", "for"]}],
+  }
 };
 
+此外，若有不想被 eslint 偵測的資料夾可以加入 .eslintignore 檔案，並在其中加入忽略清單，例如：
+
+// .eslintignore
+dist/*
+public/*
+
+============================================================================
+單元測試 | Jest
+============================================================================
 
 
+============================================================================
+轉換開發及產品環境變數 | Browerify Dotenv Envify
+============================================================================
 
+
+============================================================================
+JavaScript SASS 程式碼壓縮 | Gulp Sass Uglify
+============================================================================
+
+將程式碼壓縮、使檔案變小，能讓瀏覽器載入我們撰寫的檔案所需傳輸時間更短。
 
 
 
