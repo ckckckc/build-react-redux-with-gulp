@@ -1,97 +1,262 @@
-本篇敘述如何使用 Gulp 打造 React Redux Router ES6 的開發環境，以下將會說明所需的套件及設定方式，關於 React Redux ES6 等相關知識不在此篇筆記介紹範圍。
 
-本篇所建立的開發環境：
+<section>
+  <h1>使用 Gulp Browserify Babel 打造 React Redux Router ES6 開發環境</h1>
+  <p>
+  本篇敘述如何使用 Gulp 打造 React Redux Router ES6 的開發環境，以下將會說明所需的套件及設定方式，依建制步驟拆成五個篇章，關於 React Redux ES6 等相關知識不在此篇筆記介紹範圍。
+  </p>
 
-編譯 JSX 及 ES6 語法 | Babel Browserify
-編譯 SASS 檔案 | Gulp Sass
-建立開發用伺服器及瀏覽器自動重新載入 | Gulp Watch Connect
-檔案自動引入 | Bower Wiredep Gulp Inject
-JavaScript 語法偵錯 | ESLint
-單元測試 | Jest
-轉換開發及產品環境變數 | Browerify Dotenv Envify
-JavaScript SASS 程式碼壓縮 | Gulp Sass Uglify
-產品環境下打包所有 JS CSS 檔案 | Gulp Useref
-輸出的 CSS JS 檔案附加不重複的檔名 | Gulp Rev 
-此外，還導入 Redux React-Router 架構 | React Redux Router
+  <p>第一篇 - 編譯 ES6 JSX 語法 | 檔案自動載入 | 本地端伺服器</p>
+  <ul>
+    <li><a href="#babel-browserify-compile-jsx-es6">編譯 JSX 及 ES6 語法 | Babel Browserify</a></li>
+    <li><a href="#gulp-inject-wiredep-bower">檔案自動載入 | Bower Wiredep Gulp Inject</a></li>
+    <li><a href="#local-server-livereload-gulp-connect">建立開發用伺服器及自動重新載入 | Gulp Connect</a></li>
+  </ul>
 
-基本需求
+  <p>第二篇 - 編譯 SASS | 語法偵錯 | 單元測試</p>
+  <ul>
+    <li>編譯 SASS 語法 | Gulp Sass</li>
+    <li>JavaScript 語法偵錯 | ESLint</li>
+    <li>單元測試 | Jest</li>
+  </ul>
 
-<p>已安裝 <b>NodeJS</b> 及了解如何使用 <b>npm</b> 安裝套件，並知道如何使用 Gulp 建立 task</p>
+  <p>第三篇 - 環境變數 | 程式碼壓縮 | 檔案壓縮 | 輸出隨機檔名</p>
+  <ul>
+    <li>轉換開發及產品環境變數 | Browerify Dotenv Envify</li>
+    <li>JavaScript SASS 程式碼壓縮 | Gulp Sass Uglify</li>
+    <li>產品環境下打包所有 JS CSS 檔案 | Gulp Useref</li>
+    <li>輸出的 CSS JS 檔案附加不重複的檔名 | Gulp Rev </li>
+  </ul>
 
-============================================================================
-編譯 JSX 及 ES6 語法 | Babel Browserify
-============================================================================
+  <p>第四篇 - 彙整 Gulp task</p>
+  <ul>
+    <li>彙整 Gulp task - development</li>
+    <li>彙整 Gulp task - production</li>
+  </ul>
 
-React 使用 JSX 語法，將 View 嵌入 JS 邏輯中，JSX 為 JavaScript 的 expression，然而現在的瀏覽器是無法讀懂它及ES6 語法，因此我們需要工具編譯它，將它轉換為瀏覽器看得懂的語法，而這裡是使用 browserify babel 搭配 gulp 編譯 es6 及 jsx 的設定：
+  <p>第五篇 - 導入 Redux React-Router 架構</p> 
+  <ul>
+    <li>導入 Redux Router 架構 | React Redux Router</li>
+  </ul>
 
-需要的 node package:
+  <p>
+  前三篇會依序介紹每個功能及建置方式，第四篇會將零碎的 task 打包成一連串的動作，做成開發及產品環境的指令集，第五篇會再把 react-redux 和 react-router 基本架構導入。
+  </p>
 
-$ npm install --save-dev gulp babel-plugin-react-html-attrs babel-preset-es2015 babel-preset-react babel-preset-stage-0 babelify browserify watchify vinyl-buffer vinyl-source-stream
+
+  <p>基本需求：已安裝 <b>NodeJS</b> 及了解如何使用 <b>npm</b>，並知道如何使用 Gulp 建立 task，第四篇有彙整 Gulp task 的部分，需要理解 NodeJS CommonJS 的模組化語法。</p>
+</section>
+
+<article>
+  <h2 id="babel-browserify-compile-jsx-es6">編譯 JSX 及 ES6 語法 | Babel Browserify</h2>
+  <p>
+    React 使用 JSX 語法，將 View 嵌入 JS 邏輯中，JSX 為 JavaScript 的 expression，然而現在的瀏覽器是無法讀懂它及ES6 語法，因此我們需要編譯它，將它轉換為瀏覽器看得懂的語法，以下是使用 browserify babel 搭配 gulp 編譯 es6 及 jsx 的設定內容：
+    <code class="ck-code">$ npm install --save react react-dom</code>
+
+    <code class="ck-code">$ npm install --save-dev gulp babel-plugin-react-html-attrs babel-preset-es2015 babel-preset-react babel-preset-stage-0 babelify browserify watchify vinyl-buffer vinyl-source-stream
+    </code>
+  </p>
+
+  <p>
+    在專案的根目錄建立 <span class="ck-label">.babelrc</span> 檔案，設定 babel 的編譯規則。
+    <code class="ck-code">
+    // .babelrc 
+    {
+      "presets": ["es2015", "react", "stage-0"],
+      // react-html-attrs 可以把 JSX 中的 class 轉成 className、for 轉成 htmlFor (選用)
+      "plugins": ["react-html-attrs"]
+    }
+    </code>
+  </p>
+
+  <p>在專案的根目錄建立 <span class="ck-label">gulpfile.js</span>，開始撰寫各個 task</p>
+
+  <code class="ck-code">
+  // gulpfile.js
+  var gulp       = require('gulp');
+  var browserify = require('browserify');
+  var babelify   = require('babelify');
+  var buffer     = require('vinyl-buffer');
+  var source     = require('vinyl-source-stream');
+  var watchify   = require('watchify');
+
+  // 印出錯誤，並發出事件完成，避免編譯過程因部分錯誤而讓 watch 中的 task 停止。
+  var handleError = function(err) {
+    console.error(err); this.emit('end'); 
+  };
+
+  //  開始設定 browserify 編譯規則
+  var bundler = browserify({
+    // react 進入點
+    'entries': 'src/js/index.js', 
+    // true 可以讓瀏覽器的 console 印出出現 bug 的行數是來自在哪一個檔案的哪一行，而不是最後編譯後的檔案的哪一行
+    'debug': true,
+    // watchify 必須設定以下兩個屬性
+    'cache': {},
+    'packageCache': {},
+    // 使用 babelify 轉換：會讀取根目錄 .babelrc 檔案的 babel 轉換規則
+    'transform': [babelify]
+  });
+
+  // 若是開發環境，我們在撰寫 .js 檔案的時候，將整個 React 專案重新編譯會太慢，watchify 提供 update 事件，讓重新編譯的速度更快。
+  var watcher = watchify(bundler);
+
+  // browserify 依據設定進行編譯，並將檔案匯出至指定資料夾。
+  gulp.task('script', function() {
+    return watcher
+            .bundle()
+            .on('error', handleError)
+            .pipe(source('bundle.js'))
+            .pipe(buffer())
+            .pipe(gulp.dest('dist/js/'));
+  });
+
+  watcher.on('update', function() {
+    gulp.start('script');
+  });
+
+  若 src/js/index.js 為我們的 react 執行進入點，試者在 index.js 中寫些點單的 react 內容：
+  // src/js/index.js
+  import React from 'react';
+  import ReactDOM from 'react-dom';
+
+  ReactDOM.render(
+    <h1>hello, world</h1>,
+    document.getElementById("root")
+  );
+  </code>
+
+  <p>
+    接者執行編譯：
+    <code class="ck-code">
+      $ gulp script
+    </code>
+    可以試著更改 index.js 的內容並儲存，查看 terminal 會顯示 Gulp 已經觸發自動重新編譯，這部分只有編譯 JS 程式碼的部分，想要在瀏覽器端執行這些程式碼需要 html 檔案引入編譯好的 script 及本地端的伺服器，接者兩節會緊接著補上。
+  </p>
+</article>
+
+<article>
+  <h2 id="gulp-inject-wiredep-bower">檔案自動載入 | Bower Wiredep Gulp Inject</h2>
+</article>
 
 
-首先在專案的根目錄建立 .babelrc 檔案，儲存 babel 的編譯規則。
-// .babelrc 
+這邊建置的檔案自動載入 task 會將 bower 安裝的套件和自己撰寫的檔案一起自動引入到 html 檔中，使用 wiredep 搭配 gulp-inject 就可以達到如此目的，不需要在手動管理 html 中的 script link 標籤。
+
+$ npm install --save-dev gulp-inject wiredep
+
+使用 bower 可以管理前端常用的套件，如 jquery、bootstrap、sweetalert 等。如果 global 安裝 bower 可以像 npm 一樣，使用 bower init 開始設定 bower.json 內容，使用 bower install <套件名稱> --save 的方式安裝，預設會安裝在根目錄的 bower_components 資料夾中，記得在 gitignore 中忽略這個資料夾，若要更改安裝的目錄位置，可以在根目錄新增 .bowerrc 檔案，加入更換的資料夾位置：
+// .bowerrc
 {
-  "presets": ["es2015", "react", "stage-0"],
-  // react-html-attrs 可以把 JSX 中的 class 轉成 className、for 轉成 htmlFor (選用)
-  "plugins": ["react-html-attrs"]
+  "directory": "./dist/bower_components"
 }
 
-同樣在專案的根目錄建立 gulpfile.js，開始撰寫各個 task
+在 src/ 資料夾底下新增 index.html
+// index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build React Redux with Gulp</title>
+  <!-- bower:css -->
+  <!-- endbower  -->
+  <!-- inject:css -->
+  <!-- endinject -->
+</head>
+<body>
+<div id="root"></div>
+  <!-- bower:js -->
+  <!-- endbower -->
+  <!-- inject:js -->
+  <!-- endinject -->
+</body>
+</html>
+
+wiredep 會判斷 html 檔案中
+<!-- bower:css -->
+<!-- endbower  -->
+
+<!-- bower:js -->
+<!-- endbower -->
+的位置注入安裝的 bower package css/js
+
+gulp-inject 會判斷 html 檔案中
+<!-- inject:css -->
+<!-- endinject -->
+
+<!-- inject:js -->
+<!-- endinject -->
+的位置，將指定的檔案注入到該處 css/js
+
 
 // gulpfile.js
-var gulp       = require('gulp');
-var browserify = require('browserify');
-var babelify   = require('babelify');
-var buffer     = require('vinyl-buffer');
-var source     = require('vinyl-source-stream');
-var watchify   = require('watchify');
+var inject  = require('gulp-inject');
+var wiredep = require('wiredep').stream;
 
-// 印出錯誤，並發出事件完成，避免編譯過程因部分錯誤而讓 watch 中的 task 停止。
-var handleError = function(err) {
-  console.error(err); this.emit('end'); 
-};
+gulp.task('inject', function(){
+  var injectSources = gulp.src(
+    [
+      'dist/js/*.js', 
+      'dist/css/*.css'
+    ], 
+    {
+      read: false
+    }
+  );
 
-//  開始設定 browserify 編譯規則
-var bundler = browserify({
-  // react 進入點
-  'entries': 'src/js/index.js', 
-  // true 可以讓瀏覽器的 console 印出出現 bug 的行數是來自在哪一個檔案的哪一行，而不是最後編譯後的檔案的哪一行
-  'debug': true,
-  // watchify 必須設定以下兩個屬性
-  'cache': {},
-  'packageCache': {},
-  // 使用 babelify 轉換：會讀取根目錄 .babelrc 檔案的 babel 轉換規則
-  'transform': [babelify]
+  return gulp
+          .src('src/index.html')
+          .pipe(wiredep({'ignorePath': '../dist'}))
+          .pipe(inject(injectSources, {'ignorePath': '/dist'}))
+          .pipe(gulp.dest('dist/'));
 });
 
-// 若是開發環境，我們在撰寫 .js 檔案的時候，將整個 React 專案重新編譯會太慢，watchify 提供 update 事件，讓重新編譯的速度更快。
-var watcher = watchify(bundler);
+執行 
+$ gulp inject
 
-watcher.on('update', function(e) {
-  var start = Date.now();
-  console.log('browserify update start... ', e);
-  gulp.start('script');
-  console.log('browserify update end after ', Date.now() - start + ' milliseconds');
+就會把 src/index.html 的檔案根據設定的 inject 內容匯出至 dist/index.html，這時候就會發現目的資料夾已經把 bower 套件的 css/js 跟 bundle.js 自動引入，接著我們需要一個開發用的伺服器。
+
+<article>
+  <h2 id="local-server-livereload-gulp-connect">建立開發用伺服器及自動重新載入 | Gulp Connect</h2>
+</article>
+
+
+使用 gulp-connect 可以建立一個開發用的本地伺服器，同時可以加上 livereload 功能，讓瀏覽器手動重新載入自動化，省去每次都要手動重新載入的麻煩。晚點會把所寫過的 task 整理起來，搭配成自動重新編譯及自動引入編譯過後的檔案，然後瀏覽器自動重新載入。
+
+$ npm install --save-dev gulp-connect
+
+// gulpfile.js
+var connect = require('gulp-connect');
+
+// 建立 server: http://localhost:8080 (預設)
+gulp.task('server', function(){
+  connect.server({
+    // 本地伺服器根目錄
+    root: 'dist/',
+    // 當呼叫 connect.reload 時，瀏覽器是否要重新載入
+    livereload: true,
+    // 用於 react router，所有 root folder 以下的 request 都會轉導到指定檔案
+    fallback: 'dist/index.html'
+  });
 });
 
-// browserify 依據設定進行編譯，並將檔案匯出至指定資料夾。
-gulp.task('script', function() {
-  return watcher
-          .bundle()
-          .on('error', handleError)
-          .pipe(source('bundle.js'))
-          .pipe(buffer())
-          .pipe(gulp.dest('dist/js/'));
+// 觸發 livereload 的 task，若已經跑過 server task，觸發這個 task 就會 reload
+// 搭配 gulp.watch 來執行
+gulp.task('reload', function() {
+  return gulp.src('dist/index.html')
+          .pipe(connect.reload());
 });
 
+執行
+$ gulp server
+就能在預設的: http://localhost:8080 中，以瀏覽器看到編譯過後的檔案執行結果。
 
+這邊大致上已經把 ES6 的編譯及瀏覽器執行的簡單流程做出來了，後續章節再慢慢統整這些 gulp task，讓整個開發/產品系統越來越完善。
 
 ============================================================================
-編譯 SASS 檔案 | Gulp Sass
+編譯 SASS 語法 | Gulp Sass
 ============================================================================
 
-使用 gulp-sass 能編譯 sass 檔案，使用方式及設定都很簡單。在開發過程中，若要要讓瀏覽器讀 css 的行數反映在 .scss 檔案位址以方便開發的話，需要搭配 gulp-sourcemaps。以下是需要的套件：
+使用 gulp-sass 能編譯 sass 語法，若在開發過程中，想要讓瀏覽器讀取 css 的行數反映在 .scss 檔案位址以方便開發的話，需要搭配 gulp-sourcemaps，而 autoprefixer 可以自動加上不同瀏覽器的前綴字號。
 
 $ npm install --save-dev gulp-autoprefixer gulp-sass gulp-sourcemaps
 
@@ -122,114 +287,6 @@ gulp.task('sass', function() {
 
 
 
-
-
-
-============================================================================
-儲存編輯中的檔案會觸發再次編譯及瀏覽器自動重新載入 | Gulp Watch Connect
-============================================================================
-
-若在開發環境中，每次儲存檔案後都要手動重新載入新編譯好的程式碼是常有的事情，這部分我們可以使用 gulp-connect 來達到 livereload 的功能，當然，如果不想要 livereload ，也可以只建立一個單純開發用的本地端伺服器。
-
-$ npm install --save-dev gulp-connect
-
-// gulpfile.js
-var connect = require('gulp-connect');
-
-// 建立 server: http://localhost:8080 (預設)
-gulp.task('server', function(){
-  connect.server({
-    // 本地伺服器根目錄
-    root: 'dist/',
-    // 當 connect.reload() 時，瀏覽器是否要重新載入
-    livereload: true,
-    // 用於 react router，所有 root folder 以下的 request 都會轉導到指定檔案
-    fallback: 'dist/index.html'
-  });
-});
-
-// 觸發 livereload 的 task，若已經跑過 server task，觸發這個 task 就會 reload
-// 搭配 gulp.watch 來執行
-gulp.task('reload', function() {
-  return gulp.src('dist/index.html')
-          .pipe(connect.reload());
-});
-
-
-============================================================================
-檔案自動引入 | Bower Wiredep Gulp Inject
-============================================================================
-
-
-這邊建置的檔案自動引入 task 會將 bower 安裝的套件和自己撰寫的檔案一起自動引入到 html 檔中，使用 wiredep 搭配 gulp-inject 就可以達到如此目的，不需要在手動管理 html 中的 script link 標籤。
-
-$ npm install --save-dev gulp-inject wiredep
-
-使用 bower 可以管理前端常用的套件，如 jquery、bootstrap、sweetalert 等。如果 global 安裝 bower 可以像 npm 一樣，使用 bower init 開始設定 bower.json 內容，使用 bower install <套件名稱> --save 的方式安裝，預設會安裝在根目錄的 bower_components 資料夾中，記得在 gitignore 中忽略這個資料夾，若要更改安裝的目錄位置，可以在根目錄新增 .bowerrc 檔案，加入更換的資料夾位置：
-// .bowerrc
-{
-  "directory": "./dist/bower_components"
-}
-
-wiredep 會判斷 
-<!-- bower:css -->
-<!-- endbower  -->
-
-<!-- bower:js -->
-<!-- endbower -->
-的位置注入安裝的 bower package
-
-gulp-inject 會判斷
-<!-- inject:css -->
-<!-- endinject -->
-
-<!-- inject:js -->
-<!-- endinject -->
-的位置將指定的檔案注入到該處
-
-// index.html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Build React Redux with Gulp</title>
-  <!-- bower:css -->
-  <!-- endbower  -->
-  <!-- inject:css -->
-  <!-- endinject -->
-</head>
-<body>
-<div id="root"></div>
-  <!-- bower:js -->
-  <!-- endbower -->
-  <!-- inject:js -->
-  <!-- endinject -->
-</body>
-</html>
-
-
-// gulpfile.js
-var inject  = require('gulp-inject');
-var wiredep = require('wiredep').stream;
-
-gulp.task('inject', function(){
-  var injectSources = gulp.src(
-    [
-      'dist/js/*.js', 
-      'dist/css/*.css'
-    ], 
-    {
-      read: false
-    }
-  );
-
-  return gulp
-          .src('src/index.html')
-          .pipe(wiredep())
-          .pipe(inject(injectSources))
-          .pipe(gulp.dest('dist/'));
-});
 
 ============================================================================
 JavaScript 語法偵錯 | ESLint
@@ -296,15 +353,50 @@ module.exports = {
   }
 };
 
-此外，若有不想被 eslint 偵測的資料夾可以加入 .eslintignore 檔案，並在其中加入忽略清單，例如：
+若有不想被 eslint 偵測的資料夾可以加入 .eslintignore 檔案，並在其中加入忽略清單，例如：
 
 // .eslintignore
 dist/*
 public/*
 
+此外，若自己使用的 IDE 有支援 eslint 的 plugin，也建議一並裝上搭配使用，如此能建立有系統的寫程式習慣。
+
 ============================================================================
 單元測試 | Jest
 ============================================================================
+
+使用 Jest 建立 react 專案的單元測試環境很簡單，首先安裝 jest 套件：
+$ npm install --save-dev jest
+
+接者在 package.json 的 scripts 屬性中設定 key 為 "test" 的 value，最簡單的方式:
+// package.json
+"scripts": {
+  "test": "jest"
+}
+
+接者就能執行單元測試：
+$ npm test
+因為我們還沒撰寫任何測試檔案，因此執行後並不會有任何檔案
+
+當然，我們通常都需要ㄧ些客製化設定：
+// package.json
+"scripts": {
+  // --config <file> 設定 jest 的檔案
+  // --coverage 可以在印出測試的覆蓋率表格
+  "test": "jest --config ./.jest.json  --coverage"
+}
+
+// .jest.json
+{
+  // 可以指定要收集測試結果的資料夾
+  "collectCoverageFrom": ["src/js/**/*.js"],
+  // 執行每個測試之前，先將測試環境寫好，例如專案中使用全域變數就可以在這裡先定義
+  "setupTestFrameworkScriptFile": "./jest.env.js"
+}
+
+如果不想另外給一個檔案，也可以直接在 package.json 中加入 jest 屬性，直接在其檔案設定 jest。
+
+<a href="https://facebook.github.io/jest/docs/configuration.html">JEST 的設定文件</a>
 
 
 ============================================================================

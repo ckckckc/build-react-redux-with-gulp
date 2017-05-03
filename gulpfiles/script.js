@@ -38,15 +38,7 @@ var task = function (){
           .pipe(gulp.dest(dir.dist.js));
 };
 
-if (process.env.NODE_ENV === ENV.DEVELOPMENT) {
-  watcher.on('update', function(e) {
-    var start = Date.now();
-    console.log('browserify update start... ', e);
-    task.clean()
-        .then(task);
-    console.log('browserify update end after ', Date.now() - start + ' milliseconds');
-  });
-}
+task.watcher = watcher;
 
 task.clean = function() {
   return del([

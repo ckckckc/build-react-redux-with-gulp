@@ -5,7 +5,7 @@ var gulp        = require('gulp');
 var handleError = require('./gulp-config.js').handleError;
 var imagemin    = require('gulp-imagemin');
 
-var image = {
+var task = {
   del: function() {
     return del([
       dir.dist.images + '**/*',
@@ -34,4 +34,4 @@ var image = {
   },
 };
 
-module.exports = image;
+module.exports = task;

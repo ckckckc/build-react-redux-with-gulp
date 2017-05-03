@@ -67,6 +67,9 @@ gulp.task('watch', function() {
     gulp.watch(dir.dist.root  + '**/*', ['inject-reload']);
   }
 
+  script.watcher.on('update', function() {
+    gulp.start('script');
+  });
   gulp.watch(dir.src.sass   + '**/*.scss', ['sass']);
   gulp.watch(dir.src.images + '**/*', ['image-dev']);
 });
