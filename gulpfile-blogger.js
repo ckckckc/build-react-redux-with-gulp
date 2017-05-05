@@ -92,3 +92,13 @@ gulp.task('sass', function() {
     .pipe(autoprefixer(prefixerOptions))
     .pipe(gulp.dest('dist/css/'));
 });
+
+
+var eslint = require('gulp-eslint');
+
+gulp.task('eslint', function() {
+  return gulp.src('src/js/**/*.js')
+          .pipe(eslint())
+          .pipe(eslint.format())
+          .pipe(eslint.failAfterError());
+});
