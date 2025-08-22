@@ -53,7 +53,7 @@
     "gulp-autoprefixer": "^9.0.0",
     "gulp-clean-css": "^3.0.4",
     "gulp-connect": "^5.0.0",
-    "gulp-eslint": "^3.0.1",
+    "gulp-eslint": "^6.0.0",
     "gulp-if": "^2.0.2",
     "gulp-imagemin": "^3.2.0",
     "gulp-inject": "^4.2.0",
