@@ -55,7 +55,7 @@
     "gulp-connect": "^5.0.0",
     "gulp-eslint": "^6.0.0",
     "gulp-if": "^2.0.2",
-    "gulp-imagemin": "^3.2.0",
+    "gulp-imagemin": "^9.1.0",
     "gulp-inject": "^4.2.0",
     "gulp-rev": "^7.1.2",
     "gulp-rev-all": "^4.0.0",
