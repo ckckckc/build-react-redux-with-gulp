@@ -59,7 +59,7 @@
     "gulp-inject": "^4.2.0",
     "gulp-rev": "^7.1.2",
     "gulp-rev-all": "^0.9.7",
-    "gulp-sass": "^3.1.0",
+    "gulp-sass": "^6.0.1",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-sync": "^0.1.4",
     "gulp-uglify": "^2.1.2",
