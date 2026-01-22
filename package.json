@@ -49,7 +49,7 @@
     "enzyme": "^2.8.2",
     "eslint": "^9.33.0",
     "eslint-plugin-react": "^6.10.3",
-    "gulp": "^3.9.1",
+    "gulp": "^5.0.1",
     "gulp-autoprefixer": "^9.0.0",
     "gulp-clean-css": "^3.0.4",
     "gulp-connect": "^5.0.0",
