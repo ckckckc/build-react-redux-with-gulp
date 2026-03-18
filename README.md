@@ -2,6 +2,11 @@
 
 Starter for react-redux react-router project built by gulp.
 
+> This is an archived side project from an earlier stage of my frontend journey. 
+This project is no longer maintained.
+Over time, the dependency chain has become outdated, and the cost of keeping it up to date has grown significantly. With modern frontend tools now providing much more efficient setups, maintaining this project is no longer practical. If you're interested in setting up a React project today, I recommend referring to the official React documentation.
+This repository is kept for historical and reference purposes only.
+
 ## How To Use It
 
 ```
@@ -79,7 +84,7 @@ $ npm run lint
 * Debug mode | Gulp Sourcemap
 * JavaScript ESLint | ESLint
 * Unit test | Jest
-* Switch development/production enviroment variable | Browerify Dotenv Envify
+* Switch development/production environment variable | Browserify Dotenv Envify
 * Uglify JavaScript SASS | Gulp Sass Uglify
 * Minify PNG, JPEG, GIF and SVG images | Gulp Imagemin
 * Compress all the files by the same file type | Gulp Useref
